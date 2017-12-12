@@ -55,18 +55,21 @@ public class UserServiceImpl implements UserServices {
 
 		// 调用dao曾德方法获取数据的总数
 		int i = createDao.findAllUserCount();
+
+		Page byPage = null;
 		if (i > 0) {
 			page.setDataNum(i);
 			// 获取总页数
-			int pageCount = page.getPageCount();
 
+			int countpage = i % pageSize == 0 ? i / pageSize : i / pageSize + 1;
+			page.setPageCount(countpage);
 			// 对当前页进行判断
 			if (currentPage <= 0) {
 				currentPage = 1;
 
 			}
-			if (currentPage >= pageCount) {
-				currentPage = pageCount;
+			if (currentPage >= countpage) {
+				currentPage = countpage;
 
 			}
 			// 将当前页放入到page
@@ -74,10 +77,37 @@ public class UserServiceImpl implements UserServices {
 			page.setCurrentPage(currentPage);
 			// 调用dao层的命令进行查询当前页的数据
 
+			byPage = createDao.findUserByPage(page);
+
 		} else {
 			System.out.println("没有数据数据出错。。");
 		}
-		return null;
+
+		return byPage;
+	}
+
+	@Override
+	public boolean updateUser(UserBean userBean) {
+
+		boolean b = createDao.updataUser(userBean);
+
+		return b;
+
+	}
+
+	public UserBean findUserById(String id) {
+		UserBean userBean = createDao.findUserById(id);
+		return userBean;
+	}
+
+	public boolean deleteUser(String id) {
+		// 调用dao层的方法
+		boolean b = createDao.deleteUser(id);
+		if (b) {
+			return true;
+
+		}
+		return false;
 	}
 
 }

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.yz.bean.Page;
 import com.yz.bean.UserBean;
 import com.yz.factory.ServicesFactory;
 
@@ -71,8 +72,9 @@ public class UserServlet extends HttpServlet {
 			 */
 			if (true) {
 				// 跳转到管理员界面
-				request.setAttribute("user", username);
-				request.setAttribute("date", new Date().toString());
+
+				session.setAttribute("user", username);
+				session.setAttribute("date", new Date());
 				request.getRequestDispatcher("WEB-INF/manage/index.jsp").forward(request, response);
 			} else {
 				request.setAttribute("mess", "密码错误");
@@ -93,8 +95,88 @@ public class UserServlet extends HttpServlet {
 			}
 
 			break;
-		case "/findByPage":
+		case "/findByPage.user":
+			int currentPage = 1;
+			// 页面传递当前页
+			currentPage = Integer.parseInt(request.getParameter("currentPage"));
+			// 查找当前页
+			Page page = userServiceImpl.findByPage(currentPage);
+			// 放入到传递到页面
+			if (page != null) {
 
+				request.setAttribute("userList", page.getList());
+				request.setAttribute("page", page);
+
+				// 转发到用户界面
+				request.getRequestDispatcher("WEB-INF/manage/user.jsp").forward(request, response);
+			} else {
+				System.out.println("无数据");
+
+			}
+		case "/updateUser.user":
+			// 用于数据的更新
+			String eu_user_id = request.getParameter("userName");
+			String eu_user_name = request.getParameter("name");
+			String eu_password = request.getParameter("passWord");
+			String eu_sex = request.getParameter("sex");
+			String birthyear = request.getParameter("birthyear");
+			String birthmonth = request.getParameter("birthmonth");
+			String birthday = request.getParameter("birthday");
+			Date date = new Date(Integer.parseInt(birthday), Integer.parseInt(birthmonth), Integer.parseInt(birthday));
+			String eu_mobile = request.getParameter("mobile");
+			String eu_address = request.getParameter("address");
+			// 创建的一个Userbean 对象来接收数据
+			UserBean userBean = new UserBean();
+			userBean.setEu_user_id(eu_user_id);
+			userBean.setEu_user_name(eu_user_name);
+			userBean.setEu_password(eu_password);
+			userBean.setEu_sex(eu_sex);
+			userBean.setEu_birthday(date);
+			userBean.setEu_mobile(eu_mobile);
+			userBean.setEu_address(eu_address);
+			// 调用service 的方法
+			boolean b = userServiceImpl.updateUser(userBean);
+			if (b) {
+				request.getRequestDispatcher("/findByPage.user?currentPage=1").forward(request, response);
+
+			} else {
+				System.out.println("更新失败。。");
+			}
+
+			break;
+		case "/findUserById.user":
+			// 根据Id查找用户对象
+			String id = request.getParameter("id");
+
+			userBean = userServiceImpl.findUserById(id);
+			System.out.println(userBean);
+			if (userBean != null) {
+				request.setAttribute("userbean", userBean);
+				request.getRequestDispatcher("WEB-INF/manage/user-modify.jsp").forward(request, response);
+
+			} else {
+
+			}
+
+			break;
+		case "/deleteUserById.user":
+			// 根据Id查找用户对象
+
+			// 获取用户的Id
+			id = request.getParameter("id");
+			// 调用service 方法
+
+			// 调用service的方法删除数据库的
+			b = userServiceImpl.deleteUser(id);
+			if (b) {
+
+				request.getRequestDispatcher("/findByPage.user?currentPage=1").forward(request, response);
+
+			} else {
+				System.out.println("删除失败。。");
+			}
+
+			break;
 		default:
 			break;
 		}

@@ -18,4 +18,13 @@ public interface UserDao {
 	// 分页查询
 	public Page findUserByPage(Page page);
 
+	// 更新用户数据
+	public boolean updataUser(UserBean userBean);
+
+	// 根据用户id获得用户信息
+	public UserBean findUserById(String id);
+
+	// 删除用户的信息根据id
+	public boolean deleteUser(String id);
+
 }

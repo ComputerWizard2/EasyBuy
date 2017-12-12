@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.yz.bean.Page;
@@ -102,6 +103,8 @@ public class UserDaoImpl implements UserDao {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			Jdbc.closeResourse(connection, preparedStament, resultSet);
 		}
 		return i;
 	}
@@ -110,8 +113,10 @@ public class UserDaoImpl implements UserDao {
 	public Page findUserByPage(Page page) {
 		try {
 			connection = Jdbc.getConnection();
+			int startPage = (page.getCurrentPage() - 1) * page.getPageSize();
+
 			preparedStament = connection.prepareStatement("select * from easybuy_user limit ? , ? ");
-			preparedStament.setInt(1, (page.getCurrentPage() - 1) * page.getPageSize());
+			preparedStament.setInt(1, startPage);
 			preparedStament.setInt(2, page.getPageSize());
 			resultSet = preparedStament.executeQuery();
 			List<UserBean> list = new ArrayList<>();
@@ -133,9 +138,97 @@ public class UserDaoImpl implements UserDao {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			Jdbc.closeResourse(connection, preparedStament, resultSet);
+
 		}
 
 		return page;
+	}
+
+	@Override
+	public boolean updataUser(UserBean userBean) {
+		try {
+			connection = Jdbc.getConnection();
+			preparedStament = connection.prepareStatement(
+					"update easybuy_user set eu_password=?,eu_sex=?,eu_email=?,eu_mobile = ?,eu_address=? where eu_user_id=?");
+			preparedStament.setString(6, userBean.getEu_user_id());
+			preparedStament.setString(1, userBean.getEu_password());
+			preparedStament.setString(2, userBean.getEu_sex());
+			preparedStament.setString(3, userBean.getEu_email());
+			preparedStament.setString(4, userBean.getEu_mobile());
+			preparedStament.setString(5, userBean.getEu_address());
+			int i = preparedStament.executeUpdate();
+			if (i > 0) {
+				return true;
+
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			Jdbc.closeResourse(connection, preparedStament, resultSet);
+		}
+
+		return false;
+	}
+
+	@Override
+	public UserBean findUserById(String id) {
+		// 根据用户的id 获取用户对象
+		UserBean userBean = new UserBean();
+		try {
+			connection = Jdbc.getConnection();
+			preparedStament = connection.prepareStatement("select * from easybuy_user where eu_user_id=?");
+			preparedStament.setString(1, id);
+			resultSet = preparedStament.executeQuery();
+
+			/**
+			 * 用户名 真实姓名 性别 Email 手机 操作
+			 */
+			while (resultSet.next()) {
+				userBean.setEu_user_id(resultSet.getString(1));
+				userBean.setEu_user_name(resultSet.getString(2));
+				userBean.setEu_password(resultSet.getString(3));
+				userBean.setEu_sex(resultSet.getString(4));
+				userBean.setEu_email(resultSet.getString(7));
+				userBean.setEu_mobile(resultSet.getString(8));
+				userBean.setEu_address(resultSet.getString(9));
+				userBean.setEu_birthday(new Date(resultSet.getDate(5).getTime()));
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			Jdbc.closeResourse(connection, preparedStament, resultSet);
+		}
+		return userBean;
+	}
+
+	public boolean deleteUser(String id) {
+		// 删除一个用户的信息
+		try {
+			connection = Jdbc.getConnection();
+			preparedStament = connection.prepareStatement("delete from easybuy_user where eu_user_id=?");
+			preparedStament.setString(1, id);
+			int i = preparedStament.executeUpdate();
+			if (i > 0) {
+
+				return true;
+
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			Jdbc.closeResourse(connection, preparedStament, null);
+		}
+
+		return false;
 	}
 
 }

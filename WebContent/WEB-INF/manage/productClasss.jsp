@@ -1,16 +1,20 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<base  href="http://${header['host'] }${pageContext.request.contextPath}/WEB-INF/manage/productClass.jsp"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>后台管理 - 易买网</title>
-<link type="text/css" rel="stylesheet" href="../css/style.css" />
-<script type="text/javascript" src="../scripts/jquery-1.8.3.min.js"></script>
-<script type="text/javascript" src="../scripts/function.js"></script>
+<link type="text/css" rel="stylesheet" href="css/style.css" />
+<script type="text/javascript" src="scripts/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="scripts/function.js"></script>
 </head>
 <body>
 <div id="header" class="wrap">
-	<div id="logo"><img src="../images/logo.gif" /></div>
-	<div class="help"><a href="../index.html">返回前台页面</a></div>
+	<div id="logo"><img src="images/logo.gif" /></div>
+	<div class="help"><a href="index.html">返回前台页面</a></div>
 	<div class="navbar">
 		<ul class="clearfix">
 			<li><a href="index.html">首页</a></li>
@@ -57,36 +61,23 @@
 					<th>分类名称</th>
 					<th>操作</th>
 				</tr>
+				<c:forEach items="${page.list}" var="product">
+				<c:choose>
+				<c:when test="${product=='0'}">
 				<tr>
-					<td class="first w4 c">1</td>
+					<td class="first w4 c">${product.next}</td>
 					<td>大类</td>
 					<td class="w1 c"><a href="productClass-modify.html">修改</a> <a class="manageDel" href="javascript:void(0)">删除</a></td>
 				</tr>
+				</c:when>
 				<tr>
 					<td class="first w4 c">1</td>
 					<td class="childClass">小类</td>
 					<td class="w1 c"><a href="productClass-modify.html">修改</a> <a class="manageDel" href="javascript:void(0)">删除</a></td>
 				</tr>
-				<tr>
-					<td class="first w4 c">1</td>
-					<td class="childClass">小类</td>
-					<td class="w1 c"><a href="productClass-modify.html">修改</a> <a  class="manageDel" href="javascript:void(0)">删除</a></td>
-				</tr>
-				<tr>
-					<td class="first w4 c">1</td>
-					<td>大类</td>
-					<td class="w1 c"><a href="productClass-modify.html">修改</a> <a  class="manageDel" href="javascript:void(0)">删除</a></td>
-				</tr>
-				<tr>
-					<td class="first w4 c">1</td>
-					<td class="childClass">小类</td>
-					<td class="w1 c"><a href="productClass-modify.html">修改</a> <a  class="manageDel" href="javascript:void(0)">删除</a></td>
-				</tr>
-				<tr>
-					<td class="first w4 c">1</td>
-					<td class="childClass">小类</td>
-					<td class="w1 c"><a href="productClass-modify.html">修改</a> <a  class="manageDel" href="javascript:void(0)">删除</a></td>
-				</tr>
+				</c:choose>
+				</c:forEach>
+				
 			</table>
 		</div>
 	</div>

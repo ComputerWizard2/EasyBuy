@@ -15,4 +15,13 @@ public interface UserServices {
 	// 在这里分页的逻辑处理
 	public Page findByPage(int currentPage);
 
+	// 用于数据的更新
+	public boolean updateUser(UserBean userBean);
+
+	// 根据用户id获得用户对象
+	public UserBean findUserById(String id);
+
+	// 更具用户的ID s删除该用户
+	public boolean deleteUser(String id);
+
 }

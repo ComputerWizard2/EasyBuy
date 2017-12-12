@@ -30,7 +30,7 @@
 </div>
 <div id="childNav">
 	<div class="welcome wrap">
-		管理员pillys您好，今天是2012-12-21，欢迎回到管理后台。
+		管理员${user}您好，今天是${date}，欢迎回到管理后台。
 	</div>
 </div>
 <div id="position" class="wrap">
@@ -41,7 +41,7 @@
 		<div class="box">
 			<dl>
 				<dt>用户管理</dt>
-				<dd><a href="user.html">用户管理</a></dd>
+				<dd><a href="findByPage.user?currentPage=1">用户管理</a></dd>
 			  <dt>商品信息</dt>
 				<dd><em><a href="productClass-add.html">新增</a></em><a href="productClass.html">分类管理</a></dd>
 				<dd><em><a href="product-add.html">新增</a></em><a href="product.html">商品管理</a></dd>
@@ -81,7 +81,7 @@
 					</c:choose>
 					<td>${user.eu_email}</td>
 					<td class="w4 c">${user.eu_mobile}</td>
-					<td class="w1 c"><a href="user-modify.html">修改</a> <a class="manageDel" href="javascript:void(0)">删除</a></td>
+					<td class="w1 c"><a href="findUserById.user?id=${user.eu_user_id }">修改</a> <a class="manageDel" href="deleteUserById.user?id=${user.eu_user_id }">删除</a></td>
 				</tr>
 				</c:forEach>
 				
@@ -91,15 +91,24 @@
 	<div class="clear"></div>
      <div class="pager">
 				<ul class="clearfix">
-					<c:if test="">
-					<li><a href="">首页</a></li>
-					<li> <a href="">上一页</a></li>
+					<c:if test="${page.currentPage!=1 }">
+					<li><a href="findByPage.user?currentpage=1">首页</a></li>
+					<li> <a href="findByPage.user?currentPage=${page.currentPage-1 }">上一页</a></li>
 					</c:if>
-					<li><a >4</a></li>
-					<li class="current">5</li>
-                    <li><a >6</a></li>
-                    <li>...</li>
-					<li><a >尾页</a></li>
+					
+					<c:forEach begin="${page.currentPage-5>0?page.currentPage-5:1 }" end="${page.currentPage+4<page.pageCount?page.currentPage+4:page.pageCount }" var ="i">
+					<c:if test="${page.currentPage==i}">
+					<li class="current"><a>${ i}</a></li>
+					</c:if>
+					<c:if test="${page.currentPage!=i }">
+					<li><a href="findByPage.user?currentPage=${i}">${i}</a></li>
+
+					</c:if>
+					</c:forEach>
+					<c:if test="${page.currentPage!=page.pageCount }">
+					<li> <a href="findByPage.user?currentPage=${page.currentPage+1 }">下一页</a></li>
+					<li><a href="findByPage.user?currentpage=${page.pageCount }">尾页</a></li>
+					</c:if>
 				</ul>
 			</div>
 </div>

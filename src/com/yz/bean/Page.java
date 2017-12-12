@@ -2,12 +2,18 @@ package com.yz.bean;
 
 import java.util.List;
 
-public class Page {
+public class Page<T> {
 	private int pageSize;// 一页的数量
 	private int currentPage;// 当前的页
 	private int dataNum;// 数据表中的数量
 	private int pageCount;// 总页数
-	private List<UserBean> list;// 一页所包含的数据
+	private List<T> list;// 一页所包含的数据
+
+	@Override
+	public String toString() {
+		return "Page [pageSize=" + pageSize + ", currentPage=" + currentPage + ", dataNum=" + dataNum + ", pageCount="
+				+ pageCount + ", list=" + list + "]";
+	}
 
 	public int getPageSize() {
 		return pageSize;
@@ -39,14 +45,14 @@ public class Page {
 
 	public void setPageCount(int pageCount) {
 		// 总页数
-		this.pageCount = dataNum % pageSize == 0 ? dataNum / pageSize : dataNum / pageSize + 1;
+		this.pageCount = pageCount;
 	}
 
-	public List<UserBean> getList() {
+	public List<T> getList() {
 		return list;
 	}
 
-	public void setList(List<UserBean> list) {
+	public void setList(List<T> list) {
 		this.list = list;
 	}
 

@@ -70,8 +70,8 @@
 					<tr>
 					<td class="field">验证码：</td>
 						<td>
-                            <img src="CheackCode" id="safeCode"/><a id="changeCode" href="javascrip:void(0)">看不清，换一张</a><br>
-	                        <input type="text" name="code"><div class="mess"></div>
+                            <img src="CheackCode" id="safeCode"/><a id="changeCode" href="javascrip:void(0)">看不清，换一张</a><br/>
+	                        <input type="text" name="code"/><div class="mess"></div>
 							<span></span>
 						</td>
 					</tr>

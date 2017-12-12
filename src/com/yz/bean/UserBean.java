@@ -15,6 +15,14 @@ public class UserBean {
 	private String eu_login;
 	private String eu_status;
 
+	@Override
+	public String toString() {
+		return "UserBean [eu_user_id=" + eu_user_id + ", eu_user_name=" + eu_user_name + ", eu_password=" + eu_password
+				+ ", eu_sex=" + eu_sex + ", eu_birthday=" + eu_birthday + ", eu_identuty_code=" + eu_identuty_code
+				+ ", eu_mobile=" + eu_mobile + ", eu_email=" + eu_email + ", eu_address=" + eu_address + ", eu_login="
+				+ eu_login + ", eu_status=" + eu_status + "]";
+	}
+
 	public String getEu_mobile() {
 		return eu_mobile;
 	}
