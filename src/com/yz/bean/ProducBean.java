@@ -7,6 +7,12 @@ public class ProducBean {
 	private String epc_parentName;
 	private String epc_childName;
 
+	@Override
+	public String toString() {
+		return "ProducBean [epc_parent_id=" + epc_parent_id + ", epc_child_id=" + epc_child_id + ", epc_parentName="
+				+ epc_parentName + ", epc_childName=" + epc_childName + "]";
+	}
+
 	public int getEpc_parent_id() {
 		return epc_parent_id;
 	}

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.yz.bean.Page;
+import com.yz.bean.ProducBean;
 import com.yz.factory.ServicesFactory;
 
 import src.com.yz.service.impl.ProductServiceImp;
@@ -40,16 +41,46 @@ public class ProductServlet extends HttpServlet {
 		String servletPath = request.getServletPath();
 		switch (servletPath) {
 		case "/findByPage.product":
+			System.out.println("进来了。。");
 
 			// 全部的逻辑在service里实现
-			Page<String> page = productDaoImpl.findByPage(request, response);
+			Page<ProducBean> page = productDaoImpl.findByPage(request, response);
 			if (page != null) {
 				request.setAttribute("page", page);
-				request.getRequestDispatcher("WEB-INFO/manage/productClass.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/manage/productClass.jsp").forward(request, response);
 
 			} else {
 				System.out.println("查询数据无果。。");
 			}
+
+			break;
+		case "/productClass-modify.product":
+			// 获取父类的数据
+			boolean b = productDaoImpl.findAllParentData(request, response);
+
+			break;
+		case "/produtClass-delete.product":
+
+			boolean isDelete = productDaoImpl.deleteProduct(request, response);
+			if (isDelete) {
+				System.out.println("删除成功。。");
+
+			}
+
+			break;
+		case "/manage-result.product":
+			boolean result = productDaoImpl.updataChildData(request, response);
+			if (result) {
+
+				request.getRequestDispatcher("WEB-INF/manage/productClass.jsp").forward(request, response);
+				System.out.println("更新成功。。");
+
+			}
+
+			break;
+		case "productClass-add.product":
+			// 仅用于转发
+			request.getRequestDispatcher("WEB-INF/manage/productClass-add.jsp").forward(request, response);
 
 			break;
 

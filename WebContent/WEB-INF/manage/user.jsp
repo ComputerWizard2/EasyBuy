@@ -16,7 +16,7 @@
 <body>
 <div id="header" class="wrap">
 	<div id="logo"><img src="images/logo.gif" /></div>
-	<div class="help"><a href="index.html">返回前台页面</a></div>
+	<div class="help"><a href="index.html">返回前台页面 </a></div>
 	<div class="navbar">
 		<ul class="clearfix">
 			<li><a href="index.html">首页</a></li>
@@ -43,7 +43,7 @@
 				<dt>用户管理</dt>
 				<dd><a href="findByPage.user?currentPage=1">用户管理</a></dd>
 			  <dt>商品信息</dt>
-				<dd><em><a href="productClass-add.html">新增</a></em><a href="productClass.html">分类管理</a></dd>
+				<dd><em><a href="productClass-add.html">新增</a></em><a href="findByPage.product?currentPage">分类管理</a></dd>
 				<dd><em><a href="product-add.html">新增</a></em><a href="product.html">商品管理</a></dd>
 				<dt>订单管理</dt>
 				<dd><a href="order.html">订单管理</a></dd>
