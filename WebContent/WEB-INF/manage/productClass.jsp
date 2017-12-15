@@ -57,7 +57,7 @@
 							href="productClass.html">分类管理</a>
 					</dd>
 					<dd>
-						<em><a href="product-add.html">新增</a></em><a href="product.html">商品管理</a>
+						<em><a href="product-add.html">新增</a></em><a href="manageProduct.manage">商品管理</a>
 					</dd>
 					<dt>订单管理</dt>
 					<dd>

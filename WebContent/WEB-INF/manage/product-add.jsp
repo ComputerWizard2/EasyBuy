@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<base path="http://${header['host'] }${pageContext.request.contextPath}/WEB-INF/manage/productClass-add.jsp"/>
+<base  path ="http://${header['host'] }${pageContext.request.contextPath}/WEB-INF/manage/product-add.jsp"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>后台管理 - 易买网</title>
 <link type="text/css" rel="stylesheet" href="css/style.css" />
@@ -28,7 +28,7 @@
 </div>
 <div id="childNav">
 	<div class="welcome wrap">
-		管理员${user }您好，今天是${date }，欢迎回到管理后台。
+		管理员${user }您好，今天是${date}，欢迎回到管理后台。
 	</div>
 </div>
 <div id="position" class="wrap">
@@ -53,29 +53,52 @@
 		</div>
 	</div>
 	<div class="main">
-		<h2>添加分类</h2>
+		<h2>添加商品</h2>
 		<div class="manage">
-			<form action="manage-results.product">
+			<form id="productAdd" method="post" action="managers--results.product" enctype="multipart/form-data">
 				<table class="form">
 					<tr>
-						<td class="field">父分类：</td>
+						<td class="field">商品名称(*)：</td>
+						<td><input type="text" class="text" name="productName" value="请输入商品的名称：" /><span></span></td>
+					</tr>
+                    <tr>
+						<td class="field">描述：</td>
+						<td><input type="text" class="text" name="productDetail" /></td>
+					</tr>
+					<tr>
+						<td class="field">所属分类：</td>
 						<td>
 							<select name="parentId">
-								<option value="0" selected="selected">根栏目</option>
-								<c:forEach items="${list}" var="i">
-								<option value="${i.epc_child_id }">${i.epc_parentName}</option>
+								<c:forEach items="${map}" var="i">
+								
+								
+								 <option value="${i.key.epc_parent_id }">${i.key.epc_parentName }</option>
+								 
+									<c:forEach items="${i.value }" var="l">
+								
+									<option value="${l.epc_child_id }">└${l.epc_childName } </option>
+									</c:forEach> 
 								</c:forEach>
 								
 							</select>
 						</td>
+					</tr>					
+					<tr>
+						<td class="field">商品价格(*)：</td>
+						<td><input type="text" class="text tiny" name="productPrice" /> 元<span></span></td>
+					</tr>
+					
+					<tr>
+						<td class="field">库存(*)：</td>
+						<td><input type="text" class="text tiny" name="productNumber" /><span></span></td>
 					</tr>
 					<tr>
-						<td class="field">分类名称：</td>
-						<td><input type="text" class="text" name="className" value="请输入小类的名称" /></td>
+						<td class="field">商品图片(*)：</td>
+						<td><input type="file" class="text" name="photo" /><span></span></td>
 					</tr>
 					<tr>
 						<td></td>
-						<td><label class="ui-blue"><input type="submit" name="submit" value="更新" /></label></td>
+						<td><label class="ui-blue"><input type="submit" name="submit" value="确定" /></label></td>
 					</tr>
 				</table>
 			</form>
@@ -86,6 +109,5 @@
 <div id="footer">
 	Copyright &copy; 2013 北大青鸟 All Rights Reserved. 京ICP证1000001号
 </div>
-
 </body>
 </html>

@@ -78,9 +78,35 @@ public class ProductServlet extends HttpServlet {
 			}
 
 			break;
-		case "productClass-add.product":
-			// 仅用于转发
+		case "/productClass-add.product":
+			// 造数据库查找数据
+			boolean data = productDaoImpl.findAllParentDataAdd(request, response);
+
+			break;
+		case "/product-add.product":
+			// 出路提交过来的数据
 			request.getRequestDispatcher("WEB-INF/manage/productClass-add.jsp").forward(request, response);
+
+			break;
+		case "/manage-results.product":
+			// 调用方法进行插入
+			b = productDaoImpl.insertChildData(request, response);
+
+			break;
+		case "/managers-results.product":
+			// 调用方法转向
+			b = productDaoImpl.mangerResult(request, response);
+
+			break;
+		case "/managers--results.product":
+			// 调用方法转向
+			System.out.println("进来了。。。");
+			try {
+				b = productDaoImpl.InsertResult(request, response);
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			}
 
 			break;
 

@@ -7,16 +7,23 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
 import com.yz.bean.Page;
 import com.yz.bean.ProducBean;
+import com.yz.bean.Product;
 import com.yz.dao.impl.ProductDaoImpl;
 import com.yz.factory.DaoFactory;
+import com.yz.factory.ServicesFactory;
+import com.yz.util.UploadUtils;
 
 import src.com.yz.services.ProductService;
 
 public class ProductServiceImp implements ProductService {
 
 	private static ProductDaoImpl productDaoImpl = DaoFactory.getDaoInstance().CreateDao(ProductDaoImpl.class);
+	private static ManageProductService manageProductService = ServicesFactory.getServicesInstance()
+			.createServices(ManageProductService.class);
 
 	public Page<ProducBean> findByPage(HttpServletRequest request, HttpServletResponse response) {
 
@@ -112,6 +119,77 @@ public class ProductServiceImp implements ProductService {
 				e.printStackTrace();
 			}
 			return true;
+		}
+		return false;
+	}
+
+	// 用于父类的数据的查找未添加子类数据
+	public boolean findAllParentDataAdd(HttpServletRequest request, HttpServletResponse response) {
+		List<ProducBean> list = productDaoImpl.findAllParentData();
+
+		// 仅用于转发
+		if (list != null && list.size() > 0) {
+
+			try {
+				request.setAttribute("list", list);
+				request.getRequestDispatcher("WEB-INF/manage/productClass-add.jsp").forward(request, response);
+			} catch (ServletException | IOException e) {
+
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+	public boolean insertChildData(HttpServletRequest request, HttpServletResponse response) {
+		String parentId = request.getParameter("parentId");
+		String childName = request.getParameter("className");
+
+		boolean p = productDaoImpl.insertChildData(Integer.parseInt(parentId), childName);
+		if (p) {
+
+			try {
+				request.getRequestDispatcher("WEB-INF/manage/manage-result.jsp").forward(request, response);
+			} catch (ServletException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+		return false;
+	}
+
+	public boolean mangerResult(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			request.getRequestDispatcher("findByPage.product?currentPageProduct=1").forward(request, response);
+
+		} catch (ServletException | IOException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	public boolean InsertResult(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// 获取来自页面的数据
+
+		// 获取来自页面
+		ServletFileUpload servletFileUpload = new ServletFileUpload();
+		if (servletFileUpload.isMultipartContent(request)) {
+			UploadUtils uploadUtils = new UploadUtils();
+			Product doFileUpload = UploadUtils.doFileUpload(request);
+			// 调用service的方法通过小类id 获取大类的id；
+			Product product = productDaoImpl.findBigClassById(doFileUpload);
+			// 调用dao层方法对数据库进行插入
+			boolean isResult = productDaoImpl.insertProductData(product);
+			if (isResult) {
+
+				manageProductService.findAllProduct(request, response);
+
+			} else {
+				System.out.println("出现错误。。");
+			}
+
 		}
 		return false;
 	}

@@ -5,10 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.yz.bean.Page;
 import com.yz.bean.ProducBean;
+import com.yz.bean.Product;
 import com.yz.dao.ProductDao;
 import com.yz.util.Jdbc;
 
@@ -206,6 +209,134 @@ public class ProductDaoImpl implements ProductDao {
 
 		return false;
 
+	}
+
+	// 用于用户的跟新
+	public boolean insertChildData(int parseInt, String parseInt2) {
+		try {
+			connection = Jdbc.getConnection();
+			prepareStament = connection
+					.prepareStatement("insert into easybuy_product_category(epc_name,epc_parent_id)  values(?,?)");
+			prepareStament.setInt(2, parseInt);
+			prepareStament.setString(1, parseInt2);
+
+			int i = prepareStament.executeUpdate();
+			if (i > 0) {
+				return true;
+
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			Jdbc.closeResourse(connection, prepareStament, null);
+		}
+
+		return false;
+
+	}
+
+	public Map<ProducBean, List<ProducBean>> getBigDataAndSmallData() {
+		Map<ProducBean, List<ProducBean>> map = new HashMap<>();
+
+		ResultSet resultSet2 = null;
+		try {
+			connection = Jdbc.getConnection();
+			// 先查出对应得id
+			prepareStament = connection
+					.prepareStatement("select * from easybuy_product_category where epc_parent_id =0");
+
+			resultSet = prepareStament.executeQuery();
+			// 获取父类 的id二次查子类的信息
+			while (resultSet.next()) {
+				List<ProducBean> list = new ArrayList<>();
+				ProducBean producBean = new ProducBean();
+				int i = resultSet.getInt("epc_id");
+				producBean.setEpc_parent_id(i);
+				producBean.setEpc_parentName(resultSet.getString("epc_name"));
+				prepareStament = connection
+						.prepareStatement("select * from easybuy_product_category where epc_parent_id=?");
+
+				prepareStament.setInt(1, i);
+				resultSet2 = prepareStament.executeQuery();
+				while (resultSet2.next()) {
+					ProducBean producBean2 = new ProducBean();
+					producBean2.setEpc_child_id(resultSet2.getInt("epc_id"));
+					producBean2.setEpc_childName(resultSet2.getString("epc_name"));
+					list.add(producBean2);
+				}
+
+				map.put(producBean, list);
+
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			Jdbc.closeResourse(connection, prepareStament, resultSet);
+		}
+
+		return map;
+	}
+
+	// 对产品数据插入数据
+	public boolean insertProductData(Product product) {
+		try {
+			connection = Jdbc.getConnection();
+			prepareStament = connection.prepareStatement(
+					"insert into easybuy_product (ep_name,ep_description,ep_price,ep_stock,epc_id,epc_child_id,ep_file_name) values(?,?,?,?,?,?,?)");
+
+			prepareStament.setString(1, product.getEp_name());
+			prepareStament.setString(2, product.getEp_description());
+			prepareStament.setDouble(3, product.getEp_price());
+			prepareStament.setInt(4, product.getEp_stock());
+			prepareStament.setInt(5, product.getEpc_id());
+			prepareStament.setInt(6, product.getEpc_child_id());
+			prepareStament.setString(7, product.getEp_file_name());
+			int i = prepareStament.executeUpdate();
+			if (i > 0) {
+				return true;
+
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			Jdbc.closeResourse(connection, prepareStament, resultSet);
+		}
+
+		return false;
+	}
+	// 根据子类的id查找父类的数据
+
+	public Product findBigClassById(Product doFileUpload) {
+		try {
+			connection = Jdbc.getConnection();
+			prepareStament = connection
+					.prepareStatement("select epc_parent_id from easybuy_product_category where  epc_id =? ");
+			prepareStament.setInt(1, doFileUpload.getEpc_child_id());
+			resultSet = prepareStament.executeQuery();
+			if (resultSet.next()) {
+
+				doFileUpload.setEpc_id(resultSet.getInt(1));
+
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			Jdbc.closeResourse(connection, prepareStament, resultSet);
+		}
+
+		return doFileUpload;
 	}
 
 }

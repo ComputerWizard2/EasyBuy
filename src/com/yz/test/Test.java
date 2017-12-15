@@ -1,13 +1,15 @@
 package com.yz.test;
 
-import java.util.UUID;
+import java.io.File;
 
 public class Test {
 	public static void main(String[] args) {
-		UUID randomUUID = UUID.randomUUID();
-		System.out.println(randomUUID);
-		int hashCode = randomUUID.hashCode();
-		System.out.println(hashCode);
+		File file = new File("C:\\apache-tomcat-8.0.47\\wtpwebapps\\EasyBuy\\images/2/13");
+		boolean mkdirs = file.mkdirs();
+		if (mkdirs) {
+			System.out.println("创建成功。。");
+
+		}
 	}
 
 }
